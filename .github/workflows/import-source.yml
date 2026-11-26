@@ -22,10 +22,7 @@ jobs:
 
       - name: Copy application source
         run: |
-          rsync -a --delete --exclude='.git' /tmp/source/ ./
-          rm -rf .github/workflows
-          mkdir -p .github/workflows
-          cp /tmp/source/.gitignore .gitignore
+          rsync -a --delete --exclude='.git' --exclude='.github/workflows/' /tmp/source/ ./
 
       - name: Commit imported source
         run: |
