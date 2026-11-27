@@ -1,4 +1,4 @@
-name = "telegram-shop-bot-test"
+name = "telegram-shop-bot"
 main = "src/index.ts"
 compatibility_date = "2024-12-01"
 compatibility_flags = ["nodejs_compat"]
