@@ -13,6 +13,8 @@ const configLoading = ref(false)
 const configSaving = ref(false)
 const configError = ref('')
 const configSuccess = ref('')
+const webhookRegistering = ref(false)
+const webhookStatus = ref('')
 
 const form = ref({
   shop_name: '',
@@ -77,6 +79,24 @@ async function saveConfig() {
     configError.value = 'Lỗi kết nối'
   } finally {
     configSaving.value = false
+  }
+}
+
+async function registerTelegramWebhook() {
+  webhookRegistering.value = true
+  webhookStatus.value = ''
+  configError.value = ''
+  try {
+    const res = await api.post<{ webhook_url: string }>('/telegram-webhook/register')
+    if (res.success && res.data) {
+      webhookStatus.value = 'Đã đăng ký webhook: ' + res.data.webhook_url
+    } else {
+      configError.value = res.error || 'Không thể đăng ký webhook Telegram'
+    }
+  } catch {
+    configError.value = 'Lỗi kết nối khi đăng ký webhook Telegram'
+  } finally {
+    webhookRegistering.value = false
   }
 }
 
@@ -200,6 +220,13 @@ onUnmounted(() => { if (revenueChart) { revenueChart.destroy(); revenueChart = n
         <!-- Telegram Bot -->
         <section class="card p-5 space-y-4">
           <h3 class="section-head"><Icon name="settings" :size="18" /> Telegram Bot</h3>
+          <div class="rounded-md p-3 space-y-2" style="background: var(--surface-2)">
+            <p class="hint">Đăng ký webhook cho Worker hiện tại. Hệ thống tự dùng BOT_TOKEN và TELEGRAM_SECRET_TOKEN đã cấu hình, không hiển thị các giá trị bí mật.</p>
+            <button type="button" class="btn btn-primary" :disabled="webhookRegistering" @click="registerTelegramWebhook">
+              <Icon name="refresh" :size="16" />{{ webhookRegistering ? 'Đang đăng ký…' : 'Cập nhật Telegram Webhook' }}
+            </button>
+            <p v-if="webhookStatus" class="text-[13px]" style="color: var(--green-fg)">{{ webhookStatus }}</p>
+          </div>
           <div>
             <label class="label">Bot Token</label>
             <div class="key-row">
