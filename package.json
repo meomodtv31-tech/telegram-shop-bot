@@ -7,7 +7,7 @@
     "dev": "wrangler dev",
     "predeploy": "npm run build:all",
     "deploy": "wrangler deploy",
-    "build:cms": "npm run --prefix cms build",
+    "build:cms": "npm install --prefix cms && npm run --prefix cms build",
     "build:miniapp": "npm --prefix miniapp install && npm run --prefix miniapp build",
     "build:all": "npm run build:cms && npm run build:miniapp",
     "test": "vitest run",
