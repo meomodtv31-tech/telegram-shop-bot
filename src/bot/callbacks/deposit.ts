@@ -186,8 +186,6 @@ export async function handleDepositAmount(
     '💸 <b>Thông tin chuyển khoản</b>',
     '',
     `🏦 Ngân hàng: <b>${escapeHtml(bank.bankName)}</b>`,
-    `💳 Số TK: <code>${escapeHtml(bank.bankAccount)}</code>`,
-    `👤 Chủ TK: <b>${escapeHtml(bank.bankOwner)}</b>`,
     `💰 Số tiền: <b>${formatCurrency(amount)}</b>`,
     `📝 Nội dung CK: <code>${transferCode}</code>`,
     '',
