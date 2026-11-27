@@ -175,11 +175,27 @@ export async function handleDepositAmount(
     description: transferCode,
   })
 
-  // Send QR code image
-  await sendPhoto(botToken, chatId, qrUrl, {
+  // Send QR code image and stop the deposit if Telegram cannot fetch/send it.
+  const qrResult = await sendPhoto(botToken, chatId, qrUrl, {
     caption: '📱 Quét mã QR để chuyển khoản',
     parse_mode: 'HTML',
   })
+
+  if (!qrResult.ok) {
+    // Không để lại giao dịch pending khi người dùng chưa nhận được QR.
+    await db
+      .prepare("UPDATE deposits SET status = 'cancelled' WHERE transfer_code = ? AND status = 'pending'")
+      .bind(transferCode)
+      .run()
+
+    await sendMessage(
+      botToken,
+      chatId,
+      '⚠️ Chưa gửi được mã QR VietQR. Yêu cầu nạp tiền này đã được huỷ để tránh chuyển khoản nhầm. Vui lòng thử tạo yêu cầu mới sau ít phút.'
+    )
+    clearSession(userId)
+    return
+  }
 
   // Send transfer details
   const detailText = [
