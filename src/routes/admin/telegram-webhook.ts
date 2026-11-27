@@ -29,7 +29,7 @@ telegramWebhookAdmin.post('/register', async (c) => {
     }, 400)
   }
 
-  const webhookUrl = new URL('/webhook/telegram', c.req.url).toString()
+  const webhookUrl = 'https://telegram-shop-bot.meomodtv.workers.dev/webhook/telegram'
 
   try {
     const telegramResponse = await fetch(
