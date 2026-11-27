@@ -11,6 +11,7 @@ import { transactionRoutes } from './transactions'
 import { configRoutes } from './config'
 import { depositsRoutes } from './deposits'
 import { statsRoutes } from './stats'
+import { telegramWebhookAdmin } from './telegram-webhook'
 
 type AdminEnv = {
   Bindings: Bindings
@@ -32,6 +33,7 @@ adminApi.route('/transactions', transactionRoutes)
 adminApi.route('/config', configRoutes)
 adminApi.route('/deposits', depositsRoutes)
 adminApi.route('/stats', statsRoutes)
+adminApi.route('/telegram-webhook', telegramWebhookAdmin)
 
 // Root endpoint (protected)
 adminApi.get('/', jwtAuth, (c) => {
